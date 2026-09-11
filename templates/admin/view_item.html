@@ -1,0 +1,86 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+View Product
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='viewitem.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="view-container">
+
+    <div class="view-card">
+
+        <div class="image-section">
+
+            <img src="{{ url_for('static',
+                    filename='uploads/product_images/' + product.image) }}"
+                 alt="{{ product.name }}">
+
+        </div>
+
+        <div class="details-section">
+
+            <span class="category">
+                {{ product.category }}
+            </span>
+
+            <h1>{{ product.name }}</h1>
+
+            <h2 class="price">
+                ₹{{ product.price }}
+            </h2>
+
+            <div class="description">
+
+                <h3>Description</h3>
+
+                <p>
+                    {{ product.description }}
+                </p>
+
+            </div>
+
+            <div class="product-info">
+
+                <p>
+                    <strong>Product ID:</strong>
+                    {{ product.product_id }}
+                </p>
+
+                <p>
+                    <strong>Category:</strong>
+                    {{ product.category }}
+                </p>
+
+            </div>
+
+            <div class="actions">
+
+                <a href="/admin/update-item/{{ product.product_id }}"
+                   class="edit-btn">
+
+                    Edit Product
+
+                </a>
+
+                <a href="/admin/item-list"
+                   class="back-btn">
+
+                    Back to Products
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

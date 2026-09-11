@@ -1,0 +1,60 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+Verify OTP
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='verifyotp.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="otp-container">
+
+  <div class="otp-card">
+
+    <div class="otp-header">
+
+      <i class="fa-solid fa-shield-halved"></i>
+
+      <h1>OTP Verification</h1>
+
+      <p>
+        Enter the OTP sent to your email
+      </p>
+
+    </div>
+
+    <form method="POST" action="/verify-otp">
+
+      <div class="form-group">
+
+        <label>Enter OTP</label>
+
+        <input type="text" name="otp" placeholder="Enter 6-digit OTP" maxlength="6" required>
+        <input type='password' name="password" placeholder="Enter new password" required>
+
+      </div>
+
+      <button type="submit" class="verify-btn">
+
+        Verify OTP
+
+      </button>
+
+    </form>
+
+    <div class="extra-links">
+
+      <a href="/admin-signup">
+        Back to Signup
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

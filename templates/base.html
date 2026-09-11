@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smartcart{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='base.css') }}">
+
+    {% block css %}{% endblock %}
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+
+        <div class="logo">
+            <a href="/">Smartcart</a>
+        </div>
+
+        <!-- <div class="search-container">
+            <form action="/user/products" method="GET">
+                <input type="text"
+                       name="search"
+                       placeholder="Search products...">
+
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div> -->
+
+        <div class="nav-icons">
+
+            <a href="/user-login">
+                <i class="fa-regular fa-user"></i>
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-receipt"></i>
+            </a>
+
+            <a href="/user-logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+
+        </div>
+
+    </nav>
+
+    <!-- Flash Messages -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category,message in messages %}
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <div class="footer-box">
+
+                <h2>Smartcart</h2>
+
+                <p>
+                    Your trusted shopping partner with quality products,
+                    secure payments, and fast delivery across India.
+                    Explore top deals, trending products, and exclusive offers.
+                </p>
+
+            </div>
+
+            <div class="footer-box">
+
+                <h2>Quick Links</h2>
+
+                <a href="/user/products">All Products</a>
+                <a href="#">My Cart</a>
+                <a href="#">My Account</a>
+                <a href="#">My Orders</a>
+
+            </div>
+
+            <div class="footer-box">
+
+                <h2>Support</h2>
+
+                <p>Email: support@apnastore.com</p>
+                <p>Phone: +91 9390129219</p>
+                <p>Available: 9 AM – 9 PM</p>
+                <p>Address: India</p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+</body>
+</html>

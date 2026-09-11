@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}User Registration{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='userregister.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="register-container">
+
+    <div class="register-card">
+
+        <h1>Create Account</h1>
+
+        <form method="POST">
+
+            <input type="text"
+                   name="name"
+                   placeholder="Enter Full Name"
+                   required>
+
+            <input type="email"
+                   name="email"
+                   placeholder="Enter Email"
+                   required>
+
+            <input type="password"
+                   name="password"
+                   placeholder="Create Password"
+                   required>
+
+            <button type="submit">
+                Register
+            </button>
+
+        </form>
+
+        <a href="/user-login">
+            Already have an account? Login
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

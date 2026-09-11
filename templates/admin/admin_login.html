@@ -1,0 +1,54 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+Admin Login
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='adminlogin.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <div class="login-header">
+            <i class="fa-solid fa-user-shield"></i>
+            <h1>Admin Login</h1>
+            <p>Login to manage your store</p>
+        </div>
+
+        <form method="POST" action="/admin-login">
+
+            <label>Email Address</label>
+            <input type="email"
+                   name="email"
+                   placeholder="Enter email"
+                   required>
+
+            <label>Password</label>
+            <input type="password"
+                   name="password"
+                   placeholder="Enter password"
+                   required>
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <div class="extra-links">
+            <a href="/admin-signup">
+                Create Admin Account
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

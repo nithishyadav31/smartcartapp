@@ -1,0 +1,83 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <div class="welcome-section">
+
+        <h1>Welcome, {{ admin_name }} </h1>
+
+        <p>
+            Manage products, monitor store activities,
+            and keep your inventory updated.
+        </p>
+
+    </div>
+
+
+
+    <!-- Quick Actions -->
+
+    <div class="action-section">
+
+        <h2>Quick Actions</h2>
+
+        <div class="action-grid">
+
+            <a href="/admin/add-item" class="action-card">
+
+                <i class="fa-solid fa-plus"></i>
+
+                <h3>Add Product</h3>
+
+                <p>Add new products to store</p>
+
+            </a>
+
+            <a href="/admin/item-list" class="action-card">
+
+                <i class="fa-solid fa-list"></i>
+
+                <h3>Manage Products</h3>
+
+                <p>View, edit and delete products</p>
+
+            </a>
+
+            <a href="/admin/profile" class="action-card">
+
+                <i class="fa-solid fa-user"></i>
+
+                <h3>Profile</h3>
+
+                <p>Update account settings</p>
+
+            </a>
+
+            <a href="/admin-logout" class="action-card">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <h3>Logout</h3>
+
+                <p>Securely sign out</p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

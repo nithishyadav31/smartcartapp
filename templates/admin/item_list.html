@@ -1,0 +1,99 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+Product List
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='itemlist.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="products-container">
+
+    <div class="page-header">
+
+        <h1>Product Management</h1>
+
+        <a href="/admin/add-item" class="add-btn">
+            + Add Product
+        </a>
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for product in products %}
+
+                <tr>
+
+                    <td>{{ product.product_id }}</td>
+
+                    <td>
+                        <img src="/static/uploads/product_images/{{ product.image }}"
+                             alt="{{ product.name }}">
+                    </td>
+
+                    <td>{{ product.name }}</td>
+
+                    <td>{{ product.category }}</td>
+
+                    <td>₹{{ product.price }}</td>
+
+                    <td class="action-buttons">
+                        <a href="/admin/view-item/{{ product.product_id }}"
+                           class="view-btn">
+
+                            View
+
+                        </a>
+
+                        <a href="/admin/update-item/{{ product.product_id }}"
+                           class="edit-btn">
+
+                            Edit
+
+                        </a>
+
+                        <a href="/admin/delete-item/{{ product.product_id }}"
+                           class="delete-btn"
+                           onclick="return confirm('Delete this product?')">
+
+                            Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

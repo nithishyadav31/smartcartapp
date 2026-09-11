@@ -1,0 +1,64 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+Admin Registration
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='adminsignup.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="signup-container">
+
+    <div class="signup-card">
+
+        <div class="signup-header">
+
+            <i class="fa-solid fa-user-plus"></i>
+
+            <h1>Admin Registration</h1>
+
+            <p>Create your admin account</p>
+
+        </div>
+
+        <form method="POST" action="/admin-signup">
+
+            <label>Full Name</label>
+            <input type="text"
+                   name="name"
+                   placeholder="Enter your name"
+                   required>
+
+            <label>Email Address</label>
+            <input type="email"
+                   name="email"
+                   placeholder="Enter your email"
+                   required>
+
+            <button type="submit">
+                Send OTP
+            </button>
+
+        </form>
+
+        <div class="extra-links">
+
+            <p>
+                Already have an account?
+            </p>
+
+            <a href="/admin-login">
+                Login Here
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

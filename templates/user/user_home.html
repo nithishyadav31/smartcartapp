@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='userhome.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-content">
+        <h1>Welcome, {{ user_name }} </h1>
+
+        <p>
+            Discover trending products, exciting offers,
+            and the best shopping experience.
+        </p>
+
+        <a href="/user/products" class="shop-btn">
+            Shop Now
+        </a>
+    </div>
+
+</section>
+
+<section class="dashboard-cards">
+
+    <div class="card">
+        <i class="fa-solid fa-box-open"></i>
+        <h3>Products</h3>
+        <p>Browse all available products.</p>
+        <a href="/user/products">View Products</a>
+    </div>
+
+    <div class="card">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <h3>Cart</h3>
+        <p>Check your cart items.</p>
+        <a href="#">My Cart</a>
+    </div>
+
+    <div class="card">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <h3>Orders</h3>
+        <p>Track your orders and purchases.</p>
+        <a href="#">My Orders</a>
+    </div>
+
+    <div class="card">
+        <i class="fa-solid fa-user"></i>
+        <h3>Profile</h3>
+        <p>Manage your account details.</p>
+        <a href="#">My Profile</a>
+    </div>
+
+</section>
+
+
+
+{% endblock %}

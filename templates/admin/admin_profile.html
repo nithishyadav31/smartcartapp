@@ -1,0 +1,77 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+Admin Profile
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='adminprofile.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-container">
+
+    <div class="profile-card">
+
+        <div class="profile-header">
+
+            {% if admin.profile_image %}
+            <img src="{{ url_for('static',
+                    filename='uploads/admin_profile_images/' + admin.profile_image) }}"
+                 alt="Profile">
+            {% else %}
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                 alt="Profile">
+            {% endif %}
+
+            <h1>{{ admin.name }}</h1>
+            <p>Administrator</p>
+
+        </div>
+
+        <div class="profile-info">
+
+            <div class="info-box">
+                <label>Admin ID</label>
+                <span>{{ admin.admin_id }}</span>
+            </div>
+
+            <div class="info-box">
+                <label>Name</label>
+                <span>{{ admin.name }}</span>
+            </div>
+
+            <div class="info-box">
+                <label>Email</label>
+                <span>{{ admin.email }}</span>
+            </div>
+
+        </div>
+
+        <div class="profile-actions">
+
+            <a href="/admin/update-profile"
+               class="edit-btn">
+
+                <i class="fa-solid fa-user-pen"></i>
+                Edit Profile
+
+            </a>
+
+            <a href="/admin/change-password"
+               class="password-btn">
+
+                <i class="fa-solid fa-lock"></i>
+                Change Password
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

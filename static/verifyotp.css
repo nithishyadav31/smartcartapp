@@ -1,0 +1,116 @@
+.otp-container{
+    min-height:80vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.otp-card{
+    width:420px;
+
+    background:white;
+
+    padding:35px;
+
+    border-radius:20px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,0.12);
+
+    border-top:5px solid #10b7c9;
+}
+
+.otp-header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.otp-header i{
+    font-size:55px;
+    color:#10b7c9;
+    margin-bottom:12px;
+}
+
+.otp-header h1{
+    color:#333;
+    margin-bottom:10px;
+}
+
+.otp-header p{
+    color:#777;
+    font-size:14px;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+
+    font-weight:600;
+    color:#444;
+}
+
+.form-group input{
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    font-size:16px;
+    text-align:center;
+    letter-spacing:3px;
+
+    outline:none;
+
+    transition:0.3s;
+}
+
+.form-group input:focus{
+    border-color:#10b7c9;
+
+    box-shadow:0 0 6px rgba(16,183,201,0.25);
+}
+
+.verify-btn{
+    width:100%;
+
+    background:#10b7c9;
+    color:white;
+
+    border:none;
+
+    padding:14px;
+
+    border-radius:10px;
+
+    font-size:16px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.verify-btn:hover{
+    background:#0d9dad;
+}
+
+.extra-links{
+    text-align:center;
+    margin-top:20px;
+}
+
+.extra-links a{
+    text-decoration:none;
+    color:#10b7c9;
+    font-weight:600;
+}
+
+.extra-links a:hover{
+    text-decoration:underline;
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin_base.css') }}">
+
+    {% block css %}{% endblock %}
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <!-- Admin Navbar -->
+
+    <nav class="admin-navbar">
+
+        <div class="logo">
+            <a href="/admin-dashboard">
+                SmartCart Admin
+            </a>
+        </div>
+
+        <ul>
+
+            <li>
+                <a href="/admin-dashboard">
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="/admin/add-item">
+                    Add Product
+                </a>
+            </li>
+
+            <li>
+                <a href="/admin/item-list">
+                    Products
+                </a>
+            </li>
+
+            <li>
+                <a href="/admin/profile">
+                    Profile
+                </a>
+            </li>
+
+            <li>
+                <a href="/admin-logout">
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+    <!-- Flash Messages -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category,message in messages %}
+
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Content -->
+
+    <main class="main-content">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+</body>
+</html>

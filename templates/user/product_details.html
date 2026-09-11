@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ product.name }}
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='productdetails.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="product-details-container">
+
+    <div class="product-image-section">
+
+        <img src="/static/uploads/product_images/{{ product.image }}"
+             alt="{{ product.name }}">
+
+    </div>
+
+    <div class="product-info-section">
+
+        <span class="category">
+            {{ product.category }}
+        </span>
+
+        <h1>{{ product.name }}</h1>
+
+        <h2 class="price">
+            ₹{{ product.price }}
+        </h2>
+
+        <div class="description">
+
+            <h3>Product Description</h3>
+
+            <p>
+                {{ product.description }}
+            </p>
+
+        </div>
+
+        <div class="actions">
+
+            <a href="#"
+               class="cart-btn">
+
+                Add to Cart
+
+            </a>
+
+            <a href="#"
+               class="buy-btn">
+
+                Buy Now
+
+            </a>
+
+        </div>
+
+        <a href="/user/products"
+           class="back-btn">
+
+            ← Back to Products
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
