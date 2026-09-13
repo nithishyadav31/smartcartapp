@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}
+My Cart
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='cart.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="cart-container">
+
+    <h1>Shopping Cart</h1>
+
+    {% if not cart %}
+
+    <div class="empty-cart">
+
+        <i class="fa-solid fa-cart-shopping"></i>
+
+        <h2>Your Cart is Empty</h2>
+
+        <p>Add products to your cart and start shopping.</p>
+
+        <a href="/user/products" class="shop-btn">
+            Shop Now
+        </a>
+
+    </div>
+
+    {% else %}
+
+    <div class="cart-table">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for pid, item in cart.items() %}
+
+                <tr>
+
+                    <td>
+                        <img src="{{ url_for('static',
+                                filename='uploads/product_images/' + item.image) }}"
+                             alt="{{ item.name }}">
+                    </td>
+
+                    <td>{{ item.name }}</td>
+
+                    <td>₹{{ item.price }}</td>
+
+                    <td>
+
+                        <div class="quantity-box">
+
+                            <a href="/user/cart/decrease/{{ pid }}"
+                               class="qty-btn">
+
+                                -
+
+                            </a>
+
+                            <span>
+                                {{ item.quantity }}
+                            </span>
+
+                            <a href="/user/cart/increase/{{ pid }}"
+                               class="qty-btn">
+
+                                +
+
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        ₹{{ item.price * item.quantity }}
+                    </td>
+
+                    <td>
+
+                        <a href="/user/cart/remove/{{ pid }}"
+                           class="remove-btn">
+
+                            Remove
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="cart-summary">
+
+        <h2>
+            Grand Total :
+            <span>₹{{ grand_total }}</span>
+        </h2>
+
+        <div class="cart-buttons">
+
+            <a href="/user/products"
+               class="continue-btn">
+
+                Continue Shopping
+
+            </a>
+
+            <a href="/user/checkout"
+               class="checkout-btn">
+
+                Proceed to Checkout
+
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Payment</title>
+</head>
+
+<body>
+
+    <h2>Complete Your Payment</h2>
+
+    <p>Total Amount: ₹{{ amount }}</p>
+
+    <button id="rzp-button">Pay Now</button>
+
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        var options = {
+            "key": "{{ key_id }}",
+            "amount": "{{ amount * 100 }}",  // in paise
+            "currency": "INR",
+            "name": "SmartCart",
+            "description": "Order Payment",
+            "order_id": "{{ order_id }}",
+            "handler": function (response) {
+                // PAYMENT SUCCESS
+                window.location.href = "/payment-success?payment_id="
+                    + response.razorpay_payment_id
+                    + "&order_id=" + response.razorpay_order_id;
+            },
+        };
+
+        var rzp = new Razorpay(options);
+
+        document.getElementById('rzp-button').onclick = function (e) {
+            rzp.open();
+            e.preventDefault();
+        }
+    </script>
+
+</body>
+
+</html>

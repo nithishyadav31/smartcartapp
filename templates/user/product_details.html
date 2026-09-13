@@ -5,8 +5,7 @@
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='productdetails.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='productdetails.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -15,8 +14,7 @@
 
     <div class="product-image-section">
 
-        <img src="/static/uploads/product_images/{{ product.image }}"
-             alt="{{ product.name }}">
+        <img src="/static/uploads/product_images/{{ product.image }}" alt="{{ product.name }}">
 
     </div>
 
@@ -44,15 +42,9 @@
 
         <div class="actions">
 
-            <a href="#"
-               class="cart-btn">
+            <a href="/user/add-to-cart/{{ product.product_id }}" class="cart-btn">Add to Cart</a>
 
-                Add to Cart
-
-            </a>
-
-            <a href="#"
-               class="buy-btn">
+            <a href="/user/pay" class="buy-btn">
 
                 Buy Now
 
@@ -60,8 +52,7 @@
 
         </div>
 
-        <a href="/user/products"
-           class="back-btn">
+        <a href="/user/products" class="back-btn">
 
             ← Back to Products
 

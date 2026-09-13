@@ -15,4 +15,6 @@ MAIL_PASSWORD = 'srxz mgyh rric gghx'
 
 
 
+RAZORPAY_KEY_ID = "rzp_test_TbZRIKjhvXimV8"
+RAZORPAY_KEY_SECRET = "rDVMF2iYlCqsH2zqzvc1EulZ"
 

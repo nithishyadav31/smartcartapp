@@ -6,6 +6,7 @@ import random
 import bcrypt
 import mysql.connector
 import config
+import razorpay
 
 app=Flask(__name__)
 app.secret_key=config.SECRET_KEY
@@ -558,6 +559,130 @@ def user_logout():
     session.pop('user_email',None)
     flash('Logged out successfully!','success')
     return redirect('/user-login')
+
+# =================================================================
+# Cart module
+# =================================================================
+
+# Route 1: Add to cart
+@app.route('/user/add-to-cart/<int:product_id>')
+def add_to_cart(product_id):
+    if 'user_id' not in session:
+        flash('Please login!')
+        return redirect('/user-login')
+    if 'cart' not in session:
+        session['cart']={}
+    cart=session['cart']
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+    cursor.execute('select * from products where product_id=%s',(product_id,))
+    product=cursor.fetchone()
+    cursor.close()
+    conn.close()
+    if not product:
+        flash("Product not found.", "danger")
+        return redirect(request.referrer)
+    pid=str(product_id)
+    
+    # If exists → increase quantity
+    if pid in cart:
+        cart[pid]['quantity']+=1
+    else:
+        cart[pid]={
+            'name':product['name'],
+            'price':float(product['price']),
+            'image':product['image'],
+            'quantity':1
+        }
+    session['cart']=cart
+    flash('Item added to cart','success')
+    return redirect(request.referrer) #Return to same page
+
+#Route 2:view cart page
+@app.route('/user/cart')
+def view_cart():
+    if 'user_id' not in session:
+        flash("Please login first!", "danger")
+        return redirect('/user-login')
+    cart=session.get('cart',{})
+    grand_total=sum(item['price']*item['quantity'] for item in cart.values())
+    return render_template('/user/cart.html',cart=cart,grand_total=grand_total)
+
+
+#Route 3: Increase quantity
+@app.route("/user/cart/increase/<pid>")
+def increase_quantity(pid):
+    cart=session.get('cart',{})
+    if pid in cart:
+        cart[pid]['quantity']+=1
+    session['cart']=cart
+    return redirect('/user/cart')
+
+#Route 4: Decrease quantity
+@app.route('/user/cart/decrease/<pid>')
+def decrease_quantity(pid):
+    cart=session.get('cart',{})
+    if pid in cart:
+        cart[pid]['quantity']-=1
+        if cart[pid]['quantity']<=0:
+            cart.pop(pid)
+    session['cart']=cart
+    return redirect('/user/cart')
+
+#Route 5: Remove item from cart
+@app.route('/user/cart/remove/<pid>')
+def remove_item_cart(pid):
+    cart=session.get('cart',{})
+    if pid in cart:
+        cart.pop(pid)
+    session['cart']=cart
+    return redirect('/user/cart')
+
+# =================================================================
+# Payment gateway module
+# =================================================================
+
+razorpay_client=razorpay.Client(auth=(config.RAZORPAY_KEY_ID,config.RAZORPAY_KEY_SECRET))
+
+#Route 1:create razorpay order
+@app.route('/user/pay')
+def user_pay():
+    if 'user_id' not in session:
+        flash("Please login!", "danger")
+        return redirect('/user-login')
+
+    cart = session.get('cart', {})
+    if not cart:
+        flash("Your cart is empty!", "danger")
+        return redirect('/user/products')
+    total_amount = sum(item['price'] * item['quantity'] for item in cart.values())
+    razorpay_amount=int(total_amount*100) #convert into paise
+    razorpay_order=razorpay_client.order.create(
+        {
+            'amount':razorpay_amount,
+            'currency':'INR',
+            'payment_capture':'1'
+        }
+    )
+    session['razorpay_order_id'] = razorpay_order['id']
+    return render_template( "user/payment.html",amount=total_amount,key_id=config.RAZORPAY_KEY_ID,order_id=razorpay_order['id'])
+
+@app.route('/payment-success')
+def payment_success():
+
+    payment_id = request.args.get('payment_id')
+    order_id = request.args.get('order_id')
+
+    if not payment_id:
+        flash("Payment failed!", "danger")
+        return redirect('/user/cart')
+
+    return render_template(
+        "user/payment_success.html",
+        payment_id=payment_id,
+        order_id=order_id
+    )
+
 
 
 if __name__ == '__main__':
