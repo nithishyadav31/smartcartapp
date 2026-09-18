@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='my_orders.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="orders-page">
+
+    <div class="page-header">
+        <h1>My Orders</h1>
+        <p>Track and manage all your SmartCart orders</p>
+    </div>
+
+    {% if orders|length == 0 %}
+
+    <div class="empty-orders">
+        <i class="fa-solid fa-box-open"></i>
+        <h2>No Orders Yet</h2>
+        <p>You haven't placed any orders. Start shopping now!</p>
+        <a href="/user/products" class="shop-btn">
+            <i class="fa-solid fa-bag-shopping"></i> Browse Products
+        </a>
+    </div>
+
+    {% else %}
+
+    <div class="orders-list">
+
+        {% for order in orders %}
+
+        <div class="order-card">
+
+            <div class="order-card-header">
+                <div class="order-id">
+                    Order <span>#{{ order.order_id }}</span>
+                </div>
+                <span class="order-badge {{ order.payment_status }}">
+                    {{ order.payment_status | capitalize }}
+                </span>
+            </div>
+
+            <div class="order-info">
+
+                <div class="order-info-item">
+                    <label>Amount</label>
+                    <span>₹{{ order.amount }}</span>
+                </div>
+
+                <div class="order-info-item">
+                    <label>Date</label>
+                    <span>{{ order.created_at }}</span>
+                </div>
+
+                <div class="order-info-item">
+                    <label>Payment ID</label>
+                    <span style="font-size:12px; word-break:break-all;">{{ order.razorpay_payment_id or '—' }}</span>
+                </div>
+
+            </div>
+
+            <div class="order-card-footer">
+                <a href="/user/order-success/{{ order.order_id }}" class="view-btn primary">
+                    <i class="fa-solid fa-eye"></i> View Details
+                </a>
+                <a href="/user/download-invoice/{{ order.order_id }}" class="view-btn success">
+                    <i class="fa-solid fa-file-pdf"></i> Download Invoice
+                </a>
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

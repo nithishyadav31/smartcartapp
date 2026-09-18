@@ -1,0 +1,96 @@
+.payment-container{
+    max-width:1000px;
+    margin:30px auto;
+    padding:20px;
+}
+
+.payment-card{
+    background:white;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.payment-card h2{
+    color:#10b7c9;
+    margin-bottom:15px;
+}
+
+.address-box p{
+    margin-bottom:8px;
+    color:#444;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead{
+    background:#10b7c9;
+    color:white;
+}
+
+th,
+td{
+    padding:12px;
+    text-align:left;
+}
+
+tbody tr{
+    border-bottom:1px solid #eee;
+}
+
+.total-box{
+    text-align:center;
+}
+
+.total-box h1{
+    color:#10b7c9;
+    margin:20px 0;
+}
+
+#rzp-button{
+    background:#10b7c9;
+
+    color:white;
+
+    border:none;
+
+    padding:14px 30px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:600;
+}
+
+#rzp-button:hover{
+    background:#0d9dad;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    .payment-container{
+        padding:10px;
+    }
+
+    .payment-card{
+        padding:20px;
+    }
+
+    table{
+        display:block;
+        overflow-x:auto;
+    }
+}

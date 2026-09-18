@@ -181,3 +181,72 @@ tbody img{
 .checkout-btn{
     background:#10b7c9;
 }
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 992px){
+    .cart-container{
+        margin:20px auto;
+        padding:15px;
+    }
+}
+
+@media (max-width: 768px){
+    .cart-table{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    .cart-table table{
+        min-width:580px;
+    }
+
+    .cart-summary{
+        text-align:center;
+        padding:20px 15px;
+    }
+
+    .cart-buttons{
+        justify-content:center;
+        flex-wrap:wrap;
+    }
+}
+
+@media (max-width: 480px){
+    .cart-container{
+        padding:10px;
+    }
+
+    .cart-container h1{
+        font-size:24px;
+        margin-bottom:20px;
+    }
+
+    .empty-cart{
+        padding:30px 15px;
+    }
+
+    .empty-cart i{
+        font-size:50px;
+    }
+
+    .empty-cart h2{
+        font-size:20px;
+    }
+
+    .cart-summary h2{
+        font-size:20px;
+    }
+
+    .cart-buttons{
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .continue-btn,
+    .checkout-btn{
+        width:100%;
+        text-align:center;
+        padding:12px;
+    }
+}

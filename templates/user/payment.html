@@ -1,45 +1,146 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-    <title>Payment</title>
-</head>
+{% block title %}
+Payment
+{% endblock %}
 
-<body>
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='payment.css') }}">
+{% endblock %}
 
-    <h2>Complete Your Payment</h2>
+{% block content %}
 
-    <p>Total Amount: ₹{{ amount }}</p>
+<div class="payment-container">
 
-    <button id="rzp-button">Pay Now</button>
+    <!-- Address Section -->
 
-    <!-- Razorpay Checkout Script -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <div class="payment-card">
 
-    <script>
-        var options = {
-            "key": "{{ key_id }}",
-            "amount": "{{ amount * 100 }}",  // in paise
-            "currency": "INR",
-            "name": "SmartCart",
-            "description": "Order Payment",
-            "order_id": "{{ order_id }}",
-            "handler": function (response) {
-                // PAYMENT SUCCESS
-                window.location.href = "/payment-success?payment_id="
-                    + response.razorpay_payment_id
-                    + "&order_id=" + response.razorpay_order_id;
-            },
+        <h2>Delivery Address</h2>
+
+        <div class="address-box">
+
+            <p>
+                <strong>{{ address.fullname }}</strong>
+            </p>
+
+            <p>{{ address.mobile }}</p>
+
+            <p>{{ address.address }}</p>
+
+            <p>{{ address.city }}, {{ address.state }}</p>
+
+            <p>{{ address.pincode }}</p>
+
+            {% if address.landmark %}
+            <p>Landmark: {{ address.landmark }}</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- Order Summary -->
+
+    <div class="payment-card">
+
+        <h2>Order Summary</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for pid,item in cart.items() %}
+
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.price * item.quantity }}</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- Payment Box -->
+
+    <div class="payment-card total-box">
+
+        <h2>Total Amount</h2>
+
+        <h1>₹{{ amount }}</h1>
+
+        <button id="rzp-button">
+            Pay Now
+        </button>
+
+    </div>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+var options = {
+    "key": "{{ key_id }}",
+    "amount": "{{ amount * 100 }}",
+    "currency": "INR",
+    "name": "SmartCart",
+    "description": "Order Payment",
+    "order_id": "{{ order_id }}",
+
+    "handler": function (response) {
+
+        var form = document.createElement("form");
+
+        form.method = "POST";
+        form.action = "/verify-payment";
+
+        var fields = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature
         };
 
-        var rzp = new Razorpay(options);
+        for (var name in fields) {
 
-        document.getElementById('rzp-button').onclick = function (e) {
-            rzp.open();
-            e.preventDefault();
+            var input = document.createElement("input");
+
+            input.type = "hidden";
+            input.name = name;
+            input.value = fields[name];
+
+            form.appendChild(input);
         }
-    </script>
 
-</body>
+        document.body.appendChild(form);
+        form.submit();
+    }
+};
 
-</html>
+var rzp = new Razorpay(options);
+
+document.getElementById('rzp-button').onclick = function(e){
+
+    rzp.open();
+
+    e.preventDefault();
+}
+
+</script>
+
+{% endblock %}

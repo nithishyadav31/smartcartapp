@@ -79,6 +79,10 @@ body{
     color:#10b7c9;
 }
 
+.nav-toggle{
+    display:none;
+}
+
 /* MAIN */
 
 .main-content{
@@ -124,3 +128,139 @@ body{
     text-decoration:none;
     margin-bottom:10px;
 }
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 992px){
+    .navbar{
+        padding:0 25px;
+    }
+
+    .footer{
+        padding:40px 30px;
+    }
+
+    .footer-container{
+        gap:35px;
+    }
+}
+
+@media (max-width: 768px){
+    .navbar{
+        height:auto;
+        min-height:65px;
+        padding:12px 20px;
+        flex-wrap:wrap;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .nav-toggle{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:transparent;
+        border:2px solid white;
+        color:white;
+        font-size:20px;
+        width:42px;
+        height:42px;
+        border-radius:8px;
+        cursor:pointer;
+        padding:0;
+        margin:0;
+        outline:none;
+        transition:0.3s;
+    }
+
+    .nav-toggle:hover{
+        background:rgba(255,255,255,0.2);
+    }
+
+    .search-container{
+        width:100%;
+        order:3;
+        margin-top:10px;
+    }
+
+    .nav-icons{
+        display:none;
+        width:100%;
+        gap:15px;
+        justify-content:center;
+        margin-top:12px;
+        padding-top:12px;
+        border-top:1px solid rgba(255,255,255,0.25);
+    }
+
+    .nav-icons.active{
+        display:flex;
+    }
+
+    .nav-icons a{
+        width:38px;
+        height:38px;
+    }
+
+    .flash-message{
+        width:92%;
+    }
+
+    .footer-container{
+        grid-template-columns:1fr;
+        gap:30px;
+    }
+
+    .footer{
+        padding:35px 20px;
+    }
+}
+
+@media (max-width: 480px){
+    .navbar{
+        padding:10px 15px;
+    }
+
+    .logo a{
+        font-size:18px;
+    }
+
+    .nav-toggle{
+        width:38px;
+        height:38px;
+        font-size:18px;
+    }
+
+    .nav-icons{
+        gap:10px;
+    }
+
+    .nav-icons a{
+        width:36px;
+        height:36px;
+        font-size:14px;
+    }
+
+    .flash-message{
+        width:95%;
+        padding:10px;
+        font-size:14px;
+    }
+
+    .footer{
+        padding:25px 15px;
+    }
+
+    .footer-box h2{
+        font-size:18px;
+        margin-bottom:10px;
+    }
+
+    .footer-box p,
+    .footer-box a{
+        font-size:14px;
+        line-height:1.6;
+    }
+}
+
+

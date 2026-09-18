@@ -1,12 +1,14 @@
 .register-container{
     min-height:70vh;
+    padding:20px 15px;
     display:flex;
     justify-content:center;
     align-items:center;
 }
 
 .register-card{
-    width:450px;
+    width:100%;
+    max-width:450px;
     background:#fff;
     padding:35px;
     border-radius:20px;
@@ -67,3 +69,26 @@
 .register-card a:hover{
     text-decoration:underline;
 }
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 480px){
+    .register-container{
+        padding:20px 10px;
+    }
+
+    .register-card{
+        padding:25px 18px;
+        border-radius:15px;
+    }
+
+    .register-card h1{
+        font-size:22px;
+        margin-bottom:20px;
+    }
+
+    .register-card input,
+    .register-card button{
+        padding:12px;
+    }
+}

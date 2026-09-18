@@ -1,5 +1,6 @@
 .signup-container{
     min-height:80vh;
+    padding:20px 15px;
 
     display:flex;
     justify-content:center;
@@ -7,7 +8,8 @@
 }
 
 .signup-card{
-    width:450px;
+    width:100%;
+    max-width:450px;
 
     background:white;
 
@@ -111,3 +113,29 @@
 .extra-links a:hover{
     text-decoration:underline;
 }
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 480px){
+    .signup-container{
+        padding:20px 10px;
+    }
+
+    .signup-card{
+        padding:25px 18px;
+        border-radius:15px;
+    }
+
+    .signup-header i{
+        font-size:45px;
+    }
+
+    .signup-header h1{
+        font-size:22px;
+    }
+
+    .signup-card input,
+    .signup-card button{
+        padding:12px;
+    }
+}

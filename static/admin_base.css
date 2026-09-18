@@ -51,6 +51,10 @@ body{
     opacity:0.8;
 }
 
+.nav-toggle{
+    display:none;
+}
+
 /* Flash Message */
 
 .flash-message{
@@ -131,3 +135,126 @@ textarea:focus,
 select:focus{
     border-color:#10b7c9;
 }
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 992px){
+    .admin-navbar{
+        padding:0 25px;
+    }
+
+    .admin-navbar ul{
+        gap:18px;
+    }
+
+    .main-content{
+        padding:25px 20px;
+    }
+}
+
+@media (max-width: 768px){
+    .admin-navbar{
+        height:auto;
+        min-height:65px;
+        padding:12px 20px;
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+        flex-wrap:wrap;
+    }
+
+    .nav-toggle{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:transparent;
+        border:2px solid white;
+        color:white;
+        font-size:20px;
+        width:42px;
+        height:42px;
+        border-radius:8px;
+        cursor:pointer;
+        padding:0;
+        margin:0;
+        outline:none;
+        transition:0.3s;
+    }
+
+    .nav-toggle:hover{
+        background:rgba(255,255,255,0.2);
+    }
+
+    .admin-navbar ul{
+        display:none;
+        flex-direction:column;
+        width:100%;
+        gap:0;
+        margin-top:12px;
+        padding-top:10px;
+        border-top:1px solid rgba(255,255,255,0.25);
+    }
+
+    .admin-navbar ul.active{
+        display:flex;
+    }
+
+    .admin-navbar ul li{
+        width:100%;
+    }
+
+    .admin-navbar ul li a{
+        display:block;
+        padding:12px 10px;
+        border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+
+    .admin-navbar ul li a:hover{
+        background:rgba(255,255,255,0.15);
+    }
+
+    .main-content{
+        padding:20px 15px;
+    }
+
+    .admin-card{
+        padding:20px 15px;
+        border-radius:12px;
+    }
+
+    .flash-message{
+        width:95%;
+        margin:10px auto;
+        padding:10px;
+    }
+}
+
+@media (max-width: 480px){
+    .admin-navbar{
+        padding:10px 15px;
+    }
+
+    .logo a{
+        font-size:19px;
+    }
+
+    .nav-toggle{
+        width:38px;
+        height:38px;
+        font-size:18px;
+    }
+
+    .admin-navbar ul li a{
+        font-size:14px;
+        padding:10px 8px;
+    }
+
+    .main-content{
+        padding:15px 10px;
+    }
+
+    .admin-card{
+        padding:15px;
+    }
+}
+

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmed{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='order_success.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="success-page">
+
+    <!-- Confirmation Banner -->
+    <div class="success-banner">
+        <i class="fa-solid fa-circle-check"></i>
+        <h1>Your Order is Confirmed!</h1>
+        <p>Thank you for shopping with <strong>SmartCart</strong>. Your order has been placed successfully.</p>
+    </div>
+
+    <!-- Order & Shipping Info -->
+    <div class="info-grid">
+
+        <div class="info-card">
+            <h3><i class="fa-solid fa-receipt"></i> &nbsp;Order Details</h3>
+            <p><strong>Order ID:</strong> #{{ order.order_id }}</p>
+            <p><strong>Payment ID:</strong> {{ order.razorpay_payment_id }}</p>
+            <p><strong>Amount Paid:</strong> ₹{{ order.amount }}</p>
+            <p><strong>Order Date:</strong> {{ order.created_at }}</p>
+        </div>
+
+        {% if address %}
+        <div class="info-card">
+            <h3><i class="fa-solid fa-location-dot"></i> &nbsp;Shipping Address</h3>
+            <p><strong>{{ address.fullname }}</strong></p>
+            <p>{{ address.mobile }}</p>
+            <p>{{ address.address }}</p>
+            <p>{{ address.city }}, {{ address.state }} – {{ address.pincode }}</p>
+            {% if address.landmark %}
+            <p>Landmark: {{ address.landmark }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Order Items -->
+    <div class="items-card">
+        <h3>Order Summary</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for it in items %}
+                <tr>
+                    <td>{{ it.product_name }}</td>
+                    <td>{{ it.quantity }}</td>
+                    <td>₹{{ it.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="/user/products" class="action-btn primary-btn">
+            <i class="fa-solid fa-bag-shopping"></i> Continue Shopping
+        </a>
+        <a href="/user/my-orders" class="action-btn secondary-btn">
+            <i class="fa-solid fa-list"></i> View My Orders
+        </a>
+        <a href="/user/download-invoice/{{ order.order_id }}" class="action-btn invoice-btn">
+            <i class="fa-solid fa-file-pdf"></i> Download Invoice
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-.add-product-container{
+.address-container{
     display:flex;
     justify-content:center;
     align-items:center;
@@ -6,17 +6,19 @@
     padding:30px;
 }
 
-.add-product-card{
+.address-card{
     width:100%;
     max-width:800px;
 
-    background:white;
+    background:#fff;
 
     padding:35px;
 
     border-radius:20px;
 
-    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+
+    border-top:5px solid #10b7c9;
 }
 
 .page-header{
@@ -40,7 +42,7 @@
 }
 
 .form-group{
-    margin-bottom:20px;
+    margin-bottom:18px;
 }
 
 .form-group label{
@@ -71,30 +73,31 @@
     box-shadow:0 0 6px rgba(16,183,201,0.25);
 }
 
-.form-group textarea{
-    resize:vertical;
-}
-
-.button-group{
+.row{
     display:flex;
     gap:15px;
-    margin-top:25px;
+}
+
+.row .form-group{
+    flex:1;
 }
 
 .save-btn{
+    width:100%;
+
     background:#10b7c9;
     color:white;
 
     border:none;
 
-    padding:12px 25px;
+    padding:14px;
 
-    border-radius:8px;
-
-    cursor:pointer;
+    border-radius:10px;
 
     font-size:16px;
     font-weight:600;
+
+    cursor:pointer;
 
     transition:0.3s;
 }
@@ -103,71 +106,39 @@
     background:#0d9dad;
 }
 
-.back-btn{
-    text-decoration:none;
+/* Responsive */
 
-    background:#6c757d;
-    color:white;
+@media(max-width:768px){
 
-    padding:12px 25px;
-
-    border-radius:8px;
-
-    font-weight:600;
-
-    transition:0.3s;
-}
-
-.back-btn:hover{
-    background:#545b62;
-}
-
-/* RESPONSIVE DESIGN */
-
-@media (max-width: 768px){
-    .add-product-container{
-        padding:20px 15px;
+    .row{
+        flex-direction:column;
+        gap:0;
     }
 
-    .add-product-card{
-        padding:25px 20px;
+    .address-card{
+        padding:25px;
+    }
+}
+
+@media(max-width:480px){
+    .address-container{
+        padding:15px 10px;
+    }
+
+    .address-card{
+        padding:20px 15px;
         border-radius:15px;
+    }
+
+    .page-header h1{
+        font-size:22px;
     }
 
     .page-header i{
         font-size:45px;
     }
 
-    .page-header h1{
-        font-size:24px;
-    }
-}
-
-@media (max-width: 480px){
-    .add-product-container{
-        padding:15px 10px;
-    }
-
-    .add-product-card{
-        padding:20px 15px;
-    }
-
-    .page-header h1{
-        font-size:20px;
-    }
-
-    .button-group{
-        flex-direction:column;
-        gap:10px;
-    }
-
-    .save-btn,
-    .back-btn{
-        width:100%;
-        text-align:center;
+    .save-btn{
         padding:12px;
     }
 }
-
-
-

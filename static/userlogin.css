@@ -1,5 +1,6 @@
 .login-container{
     min-height:70vh;
+    padding:20px 15px;
 
     display:flex;
     justify-content:center;
@@ -7,7 +8,8 @@
 }
 
 .login-card{
-    width:420px;
+    width:100%;
+    max-width:420px;
 
     background:white;
 
@@ -67,3 +69,26 @@
     color:#10b7c9;
     font-weight:600;
 }
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 480px){
+    .login-container{
+        padding:20px 10px;
+    }
+
+    .login-card{
+        padding:25px 18px;
+        border-radius:15px;
+    }
+
+    .login-card h1{
+        font-size:22px;
+        margin-bottom:20px;
+    }
+
+    .login-card input,
+    .login-card button{
+        padding:12px;
+    }
+}

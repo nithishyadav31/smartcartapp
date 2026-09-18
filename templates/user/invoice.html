@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SmartCart Invoice #{{ order.order_id }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        /* INVOICE WRAPPER */
+        .invoice-box {
+            width: 90%;
+            max-width: 750px;
+            margin: 30px auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .invoice-header {
+            background: #10b7c9;
+            color: white;
+            padding: 28px 30px;
+            display: table;
+            width: 100%;
+        }
+
+        .header-left {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .header-right {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .brand-tagline {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        .invoice-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .invoice-meta {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* BODY */
+        .invoice-body {
+            padding: 25px 30px;
+        }
+
+        /* TWO COLUMN INFO */
+        .info-row {
+            display: table;
+            width: 100%;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .info-col {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding-right: 20px;
+        }
+
+        .info-col:last-child {
+            padding-right: 0;
+            padding-left: 20px;
+        }
+
+        .info-col-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #10b7c9;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #10b7c9;
+            padding-bottom: 4px;
+        }
+
+        .info-col p {
+            line-height: 1.8;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .info-col p strong {
+            color: #333;
+        }
+
+        /* ITEMS TABLE */
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #10b7c9;
+            padding-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        thead tr {
+            background: #10b7c9;
+            color: white;
+        }
+
+        thead th {
+            padding: 11px 14px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody td {
+            padding: 11px 14px;
+            color: #555;
+            font-size: 13px;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        /* TOTALS */
+        .totals-row {
+            text-align: right;
+            padding: 15px 0;
+            border-top: 2px solid #10b7c9;
+        }
+
+        .grand-total-label {
+            font-size: 15px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .grand-total-amount {
+            font-size: 22px;
+            color: #10b7c9;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+        .invoice-footer {
+            background: #f8f9fa;
+            padding: 18px 30px;
+            text-align: center;
+            border-top: 1px solid #eee;
+            color: #888;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .invoice-footer strong {
+            color: #10b7c9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-box">
+
+    <!-- HEADER -->
+    <div class="invoice-header">
+        <div class="header-left">
+            <div class="brand-name">SmartCart</div>
+            <div class="brand-tagline">Your trusted shopping partner</div>
+        </div>
+        <div class="header-right">
+            <div class="invoice-title">INVOICE</div>
+            <div class="invoice-meta">
+                Order #{{ order.order_id }}<br>
+                Date: {{ order.created_at }}<br>
+                Status: Paid
+            </div>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="invoice-body">
+
+        <!-- Billing & Shipping Info -->
+        <div class="info-row">
+
+            <div class="info-col">
+                <div class="info-col-title">Order Details</div>
+                <p><strong>Order ID:</strong> #{{ order.order_id }}</p>
+                <p><strong>Payment ID:</strong> {{ order.razorpay_payment_id }}</p>
+                <p><strong>Payment Status:</strong> Paid</p>
+                <p><strong>Order Date:</strong> {{ order.created_at }}</p>
+            </div>
+
+            <div class="info-col">
+                <div class="info-col-title">Shipping Address</div>
+                {% if address %}
+                    <p><strong>{{ address.fullname }}</strong></p>
+                    <p>{{ address.mobile }}</p>
+                    <p>{{ address.address }}</p>
+                    <p>{{ address.city }}, {{ address.state }} – {{ address.pincode }}</p>
+                    {% if address.landmark %}
+                    <p>Landmark: {{ address.landmark }}</p>
+                    {% endif %}
+                {% else %}
+                    <p>User ID: {{ order.user_id }}</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- Order Items -->
+        <div class="section-title">Order Items</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for it in items %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ it.product_name }}</td>
+                    <td>{{ it.quantity }}</td>
+                    <td>₹{{ it.price }}</td>
+                    <td>₹{{ it.price * it.quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Grand Total -->
+        <div class="totals-row">
+            <span class="grand-total-label">Grand Total: </span>
+            <span class="grand-total-amount">₹{{ order.amount }}</span>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="invoice-footer">
+        Thank you for shopping with <strong>SmartCart</strong>!<br>
+        For support: smartcart@email.com &nbsp;|&nbsp; +91 6305658407 &nbsp;|&nbsp; 9 AM – 9 PM
+    </div>
+
+</div>
+
+</body>
+</html>

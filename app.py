@@ -1,12 +1,14 @@
-from flask import Flask,render_template,request,session,url_for,flash,redirect
+from flask import Flask,render_template,request,session,url_for,flash,redirect,jsonify,make_response
 from flask_mail import Mail, Message
 from werkzeug.utils import secure_filename
+from utils.pdf_generator import generate_pdf
 import os
 import random
 import bcrypt
 import mysql.connector
 import config
 import razorpay
+import traceback
 
 app=Flask(__name__)
 app.secret_key=config.SECRET_KEY
@@ -550,8 +552,50 @@ def user_product_details(product_id):
         return redirect('/user/products')
 
     return render_template("user/product_details.html", product=product)
-    
-#Route6: user layout
+
+#Route 6: Address details
+@app.route('/user/address', methods=['GET', 'POST'])
+def user_address():
+
+    if 'user_id' not in session:
+        flash("Please login!", "danger")
+        return redirect('/user-login')
+
+    cart = session.get('cart', {})
+    if not cart:
+        flash("Your cart is empty!", "danger")
+        return redirect('/user/products')
+
+    if request.method == 'POST':
+
+        session['address'] = {
+            'fullname': request.form.get('fullname', '').strip(),
+            'mobile': request.form.get('mobile', '').strip(),
+            'address': request.form.get('address', '').strip(),
+            'city': request.form.get('city', '').strip(),
+            'state': request.form.get('state', '').strip(),
+            'pincode': request.form.get('pincode', '').strip(),
+            'landmark': request.form.get('landmark', '').strip()
+        }
+
+        flash("Address saved successfully!", "success")
+        return redirect('/user/pay')
+
+    address = session.get('address', {})
+    return render_template('user/address.html', address=address)
+
+@app.route('/user/checkout')
+def user_checkout():
+    if 'user_id' not in session:
+        flash("Please login first!", "danger")
+        return redirect('/user-login')
+    cart = session.get('cart', {})
+    if not cart:
+        flash("Your cart is empty!", "danger")
+        return redirect('/user/products')
+    return redirect('/user/address')
+
+#Route7: user layout
 @app.route('/user-logout')
 def user_logout():
     session.pop('user_id',None)
@@ -647,26 +691,47 @@ razorpay_client=razorpay.Client(auth=(config.RAZORPAY_KEY_ID,config.RAZORPAY_KEY
 #Route 1:create razorpay order
 @app.route('/user/pay')
 def user_pay():
+
     if 'user_id' not in session:
         flash("Please login!", "danger")
         return redirect('/user-login')
 
     cart = session.get('cart', {})
+
     if not cart:
         flash("Your cart is empty!", "danger")
         return redirect('/user/products')
-    total_amount = sum(item['price'] * item['quantity'] for item in cart.values())
-    razorpay_amount=int(total_amount*100) #convert into paise
-    razorpay_order=razorpay_client.order.create(
-        {
-            'amount':razorpay_amount,
-            'currency':'INR',
-            'payment_capture':'1'
-        }
-    )
-    session['razorpay_order_id'] = razorpay_order['id']
-    return render_template( "user/payment.html",amount=total_amount,key_id=config.RAZORPAY_KEY_ID,order_id=razorpay_order['id'])
 
+    address = session.get('address')
+
+    if not address:
+        flash("Please enter your delivery address first.", "info")
+        return redirect('/user/address')
+
+    total_amount = sum(
+        item['price'] * item['quantity']
+        for item in cart.values()
+    )
+
+    razorpay_amount = int(total_amount * 100)
+
+    razorpay_order = razorpay_client.order.create({
+        'amount': razorpay_amount,
+        'currency': 'INR',
+        'payment_capture': '1'
+    })
+
+    session['razorpay_order_id'] = razorpay_order['id']
+
+    return render_template(
+        "user/payment.html",
+        amount=total_amount,
+        address=address,
+        cart=cart,
+        key_id=config.RAZORPAY_KEY_ID,
+        order_id=razorpay_order['id']
+    )
+#Route 2:payment-success page
 @app.route('/payment-success')
 def payment_success():
 
@@ -683,7 +748,167 @@ def payment_success():
         order_id=order_id
     )
 
+#Route 3: Verify Payment and Store Order
+@app.route('/verify-payment', methods=['POST'])
+def verify_payment():
+    if 'user_id' not in session:
+        flash("Please login to complete the payment.", "danger")
+        return redirect('/user-login')
+    #read values from frontend (payment.html(script))
+    razorpay_payment_id=request.form.get('razorpay_payment_id')
+    razorpay_order_id = request.form.get('razorpay_order_id')
+    razorpay_signature = request.form.get('razorpay_signature')
+    if not (razorpay_payment_id and razorpay_order_id and razorpay_signature):
+        flash("Payment verification failed (missing data).", "danger")
+        return redirect('/user/cart')
+    payload = {
+        'razorpay_order_id': razorpay_order_id,
+        'razorpay_payment_id': razorpay_payment_id,
+        'razorpay_signature': razorpay_signature
+    }
 
+    try:
+        # This will raise an error if signature invalid
+        razorpay_client.utility.verify_payment_signature(payload)
+
+    except Exception as e:
+        # Verification failed
+        app.logger.error("Razorpay signature verification failed: %s", str(e))
+        flash("Payment verification failed. Please contact support.", "danger")
+        return redirect('/user/cart')
+
+    # Signature verified — now store order and items into DB
+    user_id = session['user_id']
+    cart = session.get('cart', {})
+
+    if not cart:
+        flash("Cart is empty. Cannot create order.", "danger")
+        return redirect('/user/products')
+
+    total_amount = sum(item['price'] * item['quantity'] for item in cart.values())
+
+    # DB insert: orders and order_items
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Insert into orders table
+        cursor.execute("""
+            INSERT INTO orders (user_id, razorpay_order_id, razorpay_payment_id, amount, payment_status)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (user_id, razorpay_order_id, razorpay_payment_id, total_amount, 'paid'))
+
+        order_db_id = cursor.lastrowid  # newly created order's primary key
+
+        # Insert all items
+        for pid_str, item in cart.items():
+            product_id = int(pid_str)
+            cursor.execute("""
+                INSERT INTO order_items (order_id, product_id, product_name, quantity, price)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (order_db_id, product_id, item['name'], item['quantity'], item['price']))
+
+        # Commit transaction
+        conn.commit()
+
+        # Save address snapshot keyed by order_db_id for invoice access
+        address = session.get('address')
+        if address:
+            if 'order_addresses' not in session:
+                session['order_addresses'] = {}
+            session['order_addresses'][str(order_db_id)] = address
+
+        # Clear cart and temporary razorpay order id
+        session.pop('cart', None)
+        session.pop('razorpay_order_id', None)
+
+        flash("Payment successful and order placed!", "success")
+        return redirect(f"/user/order-success/{order_db_id}")
+
+    except Exception as e:
+        # Rollback and log error
+        conn.rollback()
+        app.logger.error("Order storage failed: %s\n%s", str(e), traceback.format_exc())
+        flash("There was an error saving your order. Contact support.", "danger")
+        return redirect('/user/cart')
+
+    finally:
+        cursor.close()
+        conn.close()
+
+#Route 4: Order Success Page
+@app.route('/user/order-success/<int:order_db_id>')
+def order_success(order_db_id):
+    if 'user_id' not in session:
+        flash("Please login!", "danger")
+        return redirect('/user-login')
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM orders WHERE order_id=%s AND user_id=%s", (order_db_id, session['user_id']))
+    order=cursor.fetchone()
+    cursor.execute('select * from order_items where order_id=%s',(order_db_id,))
+    items=cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    if not order:
+        flash("Order not found.", "danger")
+        return redirect('/user/products')
+
+    # Retrieve the saved address for this order
+    address = session.get('order_addresses', {}).get(str(order_db_id))
+
+    return render_template("user/order_success.html", order=order, items=items, address=address)
+
+#Rouute 5:list of my orders page route
+@app.route('/user/my-orders')
+def my_orders():
+    if 'user_id' not in session:
+        flash("Please login!", "danger")
+        return redirect('/user-login')
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM orders WHERE user_id=%s ORDER BY created_at DESC", (session['user_id'],))
+    orders = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return render_template("user/my_orders.html", orders=orders)
+
+#Route 6: Generate invoice pdf
+@app.route('/user/download-invoice/<int:order_id>')
+def download_invoice(order_id):
+    if 'user_id' not in session:
+        flash("Please login!", "danger")
+        return redirect('/user-login')
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+    cursor.execute('select * from orders where order_id=%s and user_id=%s',(order_id,session['user_id']))
+    order=cursor.fetchone()
+    cursor.execute('select * from order_items where order_id=%s ',(order_id,))
+    items=cursor.fetchall()
+    cursor.close()
+    conn.close()
+    if not order:
+        flash("Order not found.", "danger")
+        return redirect('/user/my-orders')
+
+    # Retrieve saved delivery address for this order
+    address = session.get('order_addresses', {}).get(str(order_id))
+
+    html=render_template("user/invoice.html", order=order, items=items, address=address)
+    pdf=generate_pdf(html)
+    if not pdf:
+        flash("Error generating PDF", "danger")
+        return redirect('/user/my-orders')
+    
+    response = make_response(pdf.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f"attachment; filename=invoice_{order_id}.pdf"
+
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)

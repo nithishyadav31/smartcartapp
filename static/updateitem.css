@@ -138,3 +138,55 @@
 .cancel-btn:hover{
     background:#545b62;
 }
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 768px){
+    .update-container{
+        padding:20px 15px;
+    }
+
+    .update-card{
+        padding:25px 20px;
+        border-radius:15px;
+    }
+
+    .page-header i{
+        font-size:45px;
+    }
+
+    .page-header h1{
+        font-size:24px;
+    }
+}
+
+@media (max-width: 480px){
+    .update-container{
+        padding:15px 10px;
+    }
+
+    .update-card{
+        padding:20px 15px;
+    }
+
+    .page-header h1{
+        font-size:20px;
+    }
+
+    .image-section img{
+        width:140px;
+        height:140px;
+    }
+
+    .button-group{
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .update-btn,
+    .cancel-btn{
+        width:100%;
+        text-align:center;
+        padding:12px;
+    }
+}
