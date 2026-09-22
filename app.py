@@ -151,7 +151,7 @@ def verify_otp_post():
 
 #Route 4:Admin login    
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/admin-login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'GET':
         return render_template("admin/admin_login.html")
@@ -166,14 +166,14 @@ def admin_login():
 
     if admin is None:
         flash("Email not found! Please register first.", "danger")
-        return redirect('/')
+        return redirect('/admin-login')
     stored_hashed_password = admin['password']
     if isinstance(stored_hashed_password, str):
         stored_hashed_password = stored_hashed_password.encode('utf-8')
 
     if not bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password):
         flash("Incorrect password! Try again.", "danger")
-        return redirect('/')
+        return redirect('/admin-login')
     session['admin_id'] = admin['admin_id']
     session['admin_name'] = admin['name']
     session['admin_email'] = admin['email']
@@ -186,7 +186,7 @@ def admin_login():
 def admin_dashboard():
     if 'admin_id' not in session:
         flash("Please login to access dashboard!", "danger")
-        return redirect('/')
+        return redirect('/admin-login')
     return render_template("admin/dashboard.html", admin_name=session['admin_name'])
 
 UPLOAD_FOLDER='static/uploads/product_images'
@@ -198,7 +198,7 @@ app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 def add_item_page():
     if 'admin_id' not in session:
         flash("Please login first!", "danger")
-        return redirect('/')
+        return redirect('/admin-login')
 
     return render_template("admin/add_item.html")
 
@@ -516,7 +516,7 @@ def user_register():
     return redirect('/user-login')
 
 #Route2: user login:
-@app.route('/user-login',methods=['GET','POST'])
+@app.route('/',methods=['GET','POST'])
 
 def user_login():
     if request.method=='GET':
@@ -536,7 +536,7 @@ def user_login():
         stored_hashed_password = stored_hashed_password.encode('utf-8')
     if not bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password):
         flash("Incorrect password! Try again.", "danger")
-        return redirect('/user-login')
+        return redirect('/')
     session['user_id'] = existing_user['user_id']
     session['user_name'] = existing_user['name']
     session['user_email'] = existing_user['email']
