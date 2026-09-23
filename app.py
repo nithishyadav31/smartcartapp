@@ -936,6 +936,11 @@ def my_orders():
     conn.close()
     return render_template("user/my_orders.html", orders=orders)
 
+
+
+
+
+
 #Route 6: Generate invoice pdf
 @app.route('/user/download-invoice/<int:order_id>')
 def download_invoice(order_id):
