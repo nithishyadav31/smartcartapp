@@ -536,7 +536,7 @@ def user_login():
         stored_hashed_password = stored_hashed_password.encode('utf-8')
     if not bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password):
         flash("Incorrect password! Try again.", "danger")
-        return redirect('/')
+        return redirect('/user-login')
     session['user_id'] = existing_user['user_id']
     session['user_name'] = existing_user['name']
     session['user_email'] = existing_user['email']
@@ -548,7 +548,7 @@ def user_login():
 def user_dashboard():
     if 'user_id' not in session:
         flash('please login first!')
-        return redirect('/user-login')
+        return redirect('/')
     return render_template('user/user_home.html',user_name=session['user_name'])
 
 #Route4: user product listing
@@ -557,7 +557,7 @@ def user_products():
     
     if 'user_id' not in session:
         flash("Please login to view products!", "danger")
-        return redirect('/user-login')
+        return redirect('/')
     search=request.args.get('search','')
     category_filter=request.args.get('category','')
     conn=get_db_connection()
@@ -595,7 +595,7 @@ def user_product_details(product_id):
 
     if 'user_id' not in session:
         flash("Please login!", "danger")
-        return redirect('/user-login')
+        return redirect('/')
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -618,7 +618,7 @@ def user_address():
 
     if 'user_id' not in session:
         flash("Please login!", "danger")
-        return redirect('/user-login')
+        return redirect('/')
 
     cart = session.get('cart', {})
     if not cart:
@@ -647,7 +647,7 @@ def user_address():
 def user_checkout():
     if 'user_id' not in session:
         flash("Please login first!", "danger")
-        return redirect('/user-login')
+        return redirect('/')
     cart = session.get('cart', {})
     if not cart:
         flash("Your cart is empty!", "danger")
@@ -661,7 +661,7 @@ def user_logout():
     session.pop('user_name',None)
     session.pop('user_email',None)
     flash('Logged out successfully!','success')
-    return redirect('/user-login')
+    return redirect('/')
 
 # =================================================================
 # Cart module
@@ -672,7 +672,7 @@ def user_logout():
 def add_to_cart(product_id):
     if 'user_id' not in session:
         flash('Please login!')
-        return redirect('/user-login')
+        return redirect('/')
     if 'cart' not in session:
         session['cart']={}
     cart=session['cart']
@@ -706,7 +706,7 @@ def add_to_cart(product_id):
 def view_cart():
     if 'user_id' not in session:
         flash("Please login first!", "danger")
-        return redirect('/user-login')
+        return redirect('/')
     cart=session.get('cart',{})
     grand_total=sum(item['price']*item['quantity'] for item in cart.values())
     return render_template('/user/cart.html',cart=cart,grand_total=grand_total)
@@ -753,7 +753,7 @@ def user_pay():
 
     if 'user_id' not in session:
         flash("Please login!", "danger")
-        return redirect('/user-login')
+        return redirect('/')
 
     cart = session.get('cart', {})
 
@@ -812,7 +812,7 @@ def payment_success():
 def verify_payment():
     if 'user_id' not in session:
         flash("Please login to complete the payment.", "danger")
-        return redirect('/user-login')
+        return redirect('/')
     #read values from frontend (payment.html(script))
     razorpay_payment_id=request.form.get('razorpay_payment_id')
     razorpay_order_id = request.form.get('razorpay_order_id')
@@ -900,7 +900,7 @@ def verify_payment():
 def order_success(order_db_id):
     if 'user_id' not in session:
         flash("Please login!", "danger")
-        return redirect('/user-login')
+        return redirect('/')
     conn=get_db_connection()
     cursor=conn.cursor()
     cursor.execute("SELECT * FROM orders WHERE order_id=? AND user_id=?", (order_db_id, session['user_id']))
@@ -924,7 +924,7 @@ def order_success(order_db_id):
 def my_orders():
     if 'user_id' not in session:
         flash("Please login!", "danger")
-        return redirect('/user-login')
+        return redirect('/')
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -941,7 +941,7 @@ def my_orders():
 def download_invoice(order_id):
     if 'user_id' not in session:
         flash("Please login!", "danger")
-        return redirect('/user-login')
+        return redirect('/')
     conn=get_db_connection()
     cursor=conn.cursor()
     cursor.execute('select * from orders where order_id=? and user_id=?',(order_id,session['user_id']))
