@@ -663,6 +663,30 @@ def user_logout():
     flash('Logged out successfully!','success')
     return redirect('/')
 
+@app.route('/user/select-items', methods=['POST'])
+def select_items():
+
+    selected_ids = request.form.getlist('selected_items')
+
+    if not selected_ids:
+
+        flash("Please select at least one item", "danger")
+
+        return redirect('/user/cart')
+
+    cart = session.get('cart', {})
+
+    selected_cart = {}
+
+    for pid in selected_ids:
+
+        if pid in cart:
+
+            selected_cart[pid] = cart[pid]
+
+    session['selected_cart'] = selected_cart
+
+    return redirect('/user/address')
 # =================================================================
 # Cart module
 # =================================================================
@@ -755,7 +779,7 @@ def user_pay():
         flash("Please login!", "danger")
         return redirect('/')
 
-    cart = session.get('cart', {})
+    cart = session.get('selected_cart', {})
 
     if not cart:
         flash("Your cart is empty!", "danger")
@@ -838,7 +862,7 @@ def verify_payment():
 
     # Signature verified — now store order and items into DB
     user_id = session['user_id']
-    cart = session.get('cart', {})
+    cart = session.get('selected_cart', {})
 
     if not cart:
         flash("Cart is empty. Cannot create order.", "danger")

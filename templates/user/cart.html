@@ -5,8 +5,7 @@ My Cart
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='cart.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='cart.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -32,120 +31,131 @@ My Cart
     </div>
 
     {% else %}
+    <form action="/user/select-items" method="POST">
 
-    <div class="cart-table">
+        <div class="cart-table">
 
-        <table>
+            <table>
 
-            <thead>
+                <thead>
 
-                <tr>
-                    <th>Image</th>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                </tr>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="select-all">
+                        </th>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
 
-            </thead>
+                </thead>
 
-            <tbody>
+                <tbody>
 
-                {% for pid, item in cart.items() %}
+                    {% for pid, item in cart.items() %}
 
-                <tr>
+                    <tr>
 
-                    <td>
-                        <img src="{{ url_for('static',
-                                filename='uploads/product_images/' + item.image) }}"
-                             alt="{{ item.name }}">
-                    </td>
+                        <td>
 
-                    <td>{{ item.name }}</td>
+                            <input type="checkbox" class="product-checkbox" name="selected_items" value="{{ pid }}">
 
-                    <td>₹{{ item.price }}</td>
+                        </td>
 
-                    <td>
+                        <td>
+                            <img src="{{ url_for('static',
+                        filename='uploads/product_images/' + item.image) }}">
+                        </td>
 
-                        <div class="quantity-box">
+                        <td>{{ item.name }}</td>
 
-                            <a href="/user/cart/decrease/{{ pid }}"
-                               class="qty-btn">
+                        <td>₹{{ item.price }}</td>
 
-                                -
+                        <td>
+
+                            <div class="quantity-box">
+
+                                <a href="/user/cart/decrease/{{ pid }}" class="qty-btn">-</a>
+
+                                <span>{{ item.quantity }}</span>
+
+                                <a href="/user/cart/increase/{{ pid }}" class="qty-btn">+</a>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+                            ₹{{ item.price * item.quantity }}
+                        </td>
+
+                        <td>
+
+                            <a href="/user/cart/remove/{{ pid }}" class="remove-btn">
+
+                                Remove
 
                             </a>
 
-                            <span>
-                                {{ item.quantity }}
-                            </span>
+                        </td>
 
-                            <a href="/user/cart/increase/{{ pid }}"
-                               class="qty-btn">
+                    </tr>
 
-                                +
+                    {% endfor %}
 
-                            </a>
+                </tbody>
 
-                        </div>
-
-                    </td>
-
-                    <td>
-                        ₹{{ item.price * item.quantity }}
-                    </td>
-
-                    <td>
-
-                        <a href="/user/cart/remove/{{ pid }}"
-                           class="remove-btn">
-
-                            Remove
-
-                        </a>
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-    <div class="cart-summary">
-
-        <h2>
-            Grand Total :
-            <span>₹{{ grand_total }}</span>
-        </h2>
-
-        <div class="cart-buttons">
-
-            <a href="/user/products"
-               class="continue-btn">
-
-                Continue Shopping
-
-            </a>
-
-            <a href="/user/checkout"
-               class="checkout-btn">
-
-                Proceed to Checkout
-
-            </a>
+            </table>
 
         </div>
 
-    </div>
+        <div class="cart-summary">
 
-    {% endif %}
+            <h2>
+                Grand Total :
+                <span>₹{{ grand_total }}</span>
+            </h2>
+
+            <div class="cart-buttons">
+
+                <a href="/user/products" class="continue-btn">
+
+                    Continue Shopping
+
+                </a>
+
+                <button type="submit" class="checkout-btn">
+
+                    Buy Selected Items
+
+                </button>
+
+    </form>
 
 </div>
+
+</div>
+
+{% endif %}
+
+</div>
+<script>
+
+    document.getElementById('select-all')
+        .addEventListener('change', function () {
+
+            let checkboxes =
+                document.querySelectorAll('.product-checkbox');
+
+            checkboxes.forEach(cb => {
+                cb.checked = this.checked;
+            });
+
+        });
+
+</script>
 
 {% endblock %}
