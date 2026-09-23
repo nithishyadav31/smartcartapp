@@ -513,7 +513,7 @@ def user_register():
     conn.close()
 
     flash("Registration successful! Please login.", "success")
-    return redirect('/user-login')
+    return redirect('/')
 
 #Route2: user login:
 @app.route('/',methods=['GET','POST'])
@@ -935,9 +935,6 @@ def my_orders():
     cursor.close()
     conn.close()
     return render_template("user/my_orders.html", orders=orders)
-
-
-
 
 
 
